@@ -2,11 +2,13 @@
 #define PETCLIENT_H
 
 #include <QObject>
+#include <QHostAddress>
 
 class QUdpSocket;
 class QTcpServer;
 class QByteArray;
-class QHostAddress;
+
+const int BUFFER_SIZE = 512;
 
 class PetClient : public QObject {
 	
@@ -15,18 +17,36 @@ class PetClient : public QObject {
 	QUdpSocket * m_senderSocket;
 	QTcpServer * m_listener;
 	
-	unsigned short m_block;
+	long long int m_nextDataBlock;
 	
 public:
 	
 	explicit PetClient(QObject *parent = nullptr);
 	virtual ~PetClient() override;
 	
-	void sendMessage(const QByteArray & mess) const;
+	bool sendMessage(const QByteArray & mess) const;
 	
 private:
 	
 	void connectedHandle();
+	void disconnectedHandle();
+	void readData();
+	
+signals:
+	
+	///
+	/// \brief onMessageReceived
+	/// \arg output message	(out)
+	///
+	void onMessageReceived(QByteArray);
+	
+	///
+	/// \brief onDisconnect
+	/// \arg peer address	(out)
+	/// \arg peer port		(out)
+	/// \arg peer name		(out)
+	///
+	void onDisconnect(QHostAddress, unsigned short, QString);
 	
 };
 

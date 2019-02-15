@@ -15,7 +15,7 @@ PetClient::PetClient(QObject *parent) : QObject(parent) {
 	m_listener = new QTcpServer(this);
 	m_listener->listen(QHostAddress::Any, 7767);
 	
-	m_block = 0;
+	m_nextDataBlock = 0;
 	
 	connect(m_listener, &QTcpServer::newConnection, this, &PetClient::connectedHandle);
 }
@@ -28,51 +28,56 @@ PetClient::~PetClient() {
 	delete m_senderSocket;
 }
 
-void PetClient::sendMessage(const QByteArray & mess) const {
-	
-	QNetworkDatagram datagram(mess, QHostAddress::LocalHost, 7777);
-	
-	if (m_senderSocket->writeDatagram(datagram) == -1)
-		qDebug() << "can't send message";
-	
+bool PetClient::sendMessage(const QByteArray & mess) const {
+	return m_senderSocket->writeDatagram(mess, QHostAddress::LocalHost, 7777) != -1;
 }
 
 void PetClient::connectedHandle() {
 	QTcpSocket * clientSock = m_listener->nextPendingConnection();
 	qDebug() << clientSock->peerAddress().toString() + " has been connected";
 	
-	//TODO: replace lambda to class method
-	connect(clientSock, &QTcpSocket::disconnected, this, [clientSock](){
-		qDebug() << clientSock->peerAddress().toString() + " disconnected";
-		clientSock->close();
-	});
+	connect(clientSock, &QTcpSocket::disconnected, this, &PetClient::disconnectedHandle);
+	connect(clientSock, &QTcpSocket::readyRead, this, &PetClient::readData);
+}
+
+void PetClient::disconnectedHandle() {
+	QTcpSocket * senderSocket = static_cast<QTcpSocket*>(sender());
+	if (!senderSocket) {
+		qDebug() << __FUNCTION__ << "Error: Socket is nullptr";
+		return;
+	}
+	emit onDisconnect(senderSocket->peerAddress(),
+	                  senderSocket->peerPort(),
+	                  senderSocket->peerName());
+	senderSocket->close();
+	senderSocket->deleteLater();
+}
+
+void PetClient::readData() {
+	QTcpSocket * senderSocket = static_cast<QTcpSocket*>(sender());
+	if (!senderSocket) {
+		qDebug() << __FUNCTION__ << "Error: Socket is nullptr";
+		return;
+	}
 	
-	//TODO: replace lambda to class method
-	connect(clientSock, &QTcpSocket::readyRead, this, [this]() {
-		QTcpSocket * client = static_cast<QTcpSocket*>(sender());
-		if (!client) {
-			qDebug() << "what the fuck is going on ???";
-			return;
-		}
-		
-		QByteArray mess;
-		char * buff = new char[512];
-		while(true) {
-			memset(buff, 0, 512);
-			client->read(buff, 512);
-			if (m_block == 0) {
-				if (client->bytesAvailable() < sizeof(m_block)) {
-					mess.append(buff);
-					break;
-				}
-				m_block = client->bytesAvailable();
+	QByteArray message;
+	QString utfStr;
+	char * dataBuffer = new char[BUFFER_SIZE];
+	memset(dataBuffer, 0, BUFFER_SIZE);
+	while(true) {
+		senderSocket->read(dataBuffer, BUFFER_SIZE);
+		if (m_nextDataBlock == 0) {
+			if (senderSocket->bytesAvailable() == 0) {
+				message.append(dataBuffer);
+				break;
 			}
-			if (client->bytesAvailable() < m_block) break;
-			mess.append(buff);
-			m_block = 0;
+			m_nextDataBlock = senderSocket->bytesAvailable();
 		}
-		qDebug() << mess;
-		delete [] buff;
-	});
+		message.append(dataBuffer);
+		m_nextDataBlock = 0;
+		if (senderSocket->bytesAvailable() == 0) break;
+	}
+	delete [] dataBuffer;
+	emit onMessageReceived(message);
 }
 
