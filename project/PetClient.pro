@@ -1,10 +1,10 @@
-QT -= gui
-QT += network
+QT += core gui widgets network
+
+TEMPLATE = app
 
 TARGET = PetClient
 
 CONFIG += c++17 console
-CONFIG -= app_bundle
 
 DESTDIR = ../bin
 
@@ -22,9 +22,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 INCLUDEPATH += ../include
 
 SOURCES += ../src/main.cpp
+SOURCES += ../src/PetClientWindow.cpp
 SOURCES += ../src/PetClient.cpp
 
 HEADERS += ../include/PetClient.h
+HEADERS += ../include/PetClientWindow.h
+
+FORMS += ../ui/PetClientWindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

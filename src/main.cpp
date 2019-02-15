@@ -1,18 +1,12 @@
-#include <QCoreApplication>
-#include <QTime>
+#include "PetClientWindow.h"
 
-#include "PetClient.h"
+#include <QApplication>
 
 int main(int argc, char **argv) {
-	QCoreApplication a(argc, argv);
+	QApplication a(argc, argv);
 	
-	PetClient * client = new PetClient(&a);
+	PetClientWindow window;
+	window.show();
 	
-	QByteArray message;
-	message.append(QTime::currentTime().toString().toUtf8());
-	message.append("PetToPetTeam ");
-	
-	//Test Message Sending
-	client->sendMessage(message);
 	return a.exec();
 }
