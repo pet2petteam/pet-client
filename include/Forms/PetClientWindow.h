@@ -15,6 +15,8 @@ const int8_t MIN_LOGIN_LENGTH = 6;
 const int8_t MAX_LOGIN_LENGTH = 18;
 
 class QWidget;
+class MessengerWidget;
+class PetClient;
 
 enum class WindowState : int8_t {
 	Start = 0,
@@ -41,7 +43,8 @@ enum class PasswordStatus : int8_t {
 	Long = 2,
 	NumOnly = 3,
 	Easy = 4,
-	Empty = 5
+	Empty = 5,
+	Invalid = 6
 	//etc
 };
 
@@ -61,6 +64,9 @@ class PetClientWindow : public QMainWindow {
 	QWidget * m_signInUpFrame;
 	QWidget * m_confirmationFrame;
 	QWidget * m_messagingFrame;
+	
+	MessengerWidget * m_messenger;
+	PetClient * m_petClient;
 	
 	WindowState m_state;
 	
@@ -106,6 +112,12 @@ private:
 	bool checkLoginIsFree(const QString & login) const;
 	bool checkEmailIsFree(const QString & email) const;
 	bool checkForWrongSymbols(const QString & string) const;
+	
+	///
+	/// \brief checkPassComplexity
+	/// \param pass - password string
+	/// \return true if password is correct
+	///
 	bool checkPassComplexity(const QString & pass) const;
 	
 	//SLOTS

@@ -22,13 +22,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 INCLUDEPATH += ../include
 
 SOURCES += ../src/main.cpp
-SOURCES += ../src/PetClientWindow.cpp
 SOURCES += ../src/PetClient.cpp
+SOURCES += ../src/Forms/MessengerWidget.cpp
+SOURCES += ../src/Forms/PetClientWindow.cpp
 
 HEADERS += ../include/PetClient.h
-HEADERS += ../include/PetClientWindow.h
+HEADERS += ../include/Forms/MessengerWidget.h
+HEADERS += ../include/Forms/PetClientWindow.h
 
 FORMS += ../ui/PetClientWindow.ui
+FORMS += ../ui/MessengerWidget.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

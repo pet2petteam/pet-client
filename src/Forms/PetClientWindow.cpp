@@ -1,5 +1,8 @@
-#include "PetClientWindow.h"
+#include "Forms/PetClientWindow.h"
+#include "Forms/MessengerWidget.h"
 #include "ui_PetClientWindow.h"
+
+#include "PetClient.h"
 
 #include <QWidget>
 #include <QMessageBox>
@@ -19,15 +22,32 @@ PetClientWindow::PetClientWindow(QWidget *parent) :
 	m_confirmationFrame = ui->confirmationWindowFrame;
 	m_confirmationFrame->setVisible(false);
 	
+	m_messenger = new MessengerWidget(this);
 	m_messagingFrame = ui->messagingWindowFrame;
+	ui->messengerLayout->addWidget(m_messenger);
+	m_messenger->show();
 	m_messagingFrame->setVisible(false);
+	
+	m_messenger->appentReceivedMessage("This is a text message");
+	m_messenger->appentReceivedMessage("Это тестовое сообщение");
+	
+	m_petClient = new PetClient(this);
 	
 	connect(ui->signInButton, &QPushButton::clicked, this, &PetClientWindow::onPressSignIn);
 	connect(ui->signUpButton, &QPushButton::clicked, this, &PetClientWindow::onPressSignUp);
 	connect(ui->signInButton_2, &QPushButton::clicked, this, &PetClientWindow::onPressSignInUp);
+	
+	connect(m_petClient, &PetClient::onMessageReceived, this, [this](const QByteArray & messBuffer){
+		m_messenger->appentReceivedMessage(QString::fromUtf8(messBuffer));
+	});
+	connect(m_messenger, &MessengerWidget::onMessageSend, this, [this](const QString & messString){
+		m_petClient->sendMessage(messString.toUtf8());
+	});
 }
 
 PetClientWindow::~PetClientWindow() {
+	delete m_messenger;
+	delete m_petClient;
 	delete ui;
 }
 
@@ -74,7 +94,7 @@ PasswordStatus PetClientWindow::checkPassword(const QString & pass, QString & me
 		mess = "Password is easy";
 		return PasswordStatus::Easy;
 	}
-	if (QRegExp("\\D*").exactMatch(pass)) {
+	if (QRegExp("^\\d+$").exactMatch(pass)) {
 		mess = "Password can't be a number";
 		return PasswordStatus::NumOnly;
 	}
@@ -91,7 +111,8 @@ EmailStatus PetClientWindow::checkEmail(const QString & email, QString & mess) {
 		mess = "Email is already taken";
 		return EmailStatus::Taken;
 	}
-	if (QRegExp("^[A-Z0-9._%-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$").exactMatch(email)) {
+	QString regexp = "^(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+	if (QRegExp(regexp).exactMatch(email)) {
 		mess = "Email isn't valid";
 		return EmailStatus::Invalid;
 	}
@@ -117,9 +138,7 @@ bool PetClientWindow::checkForWrongSymbols(const QString & string) const {
 }
 
 bool PetClientWindow::checkPassComplexity(const QString & pass) const {
-	//TODO: check this
-	(void)pass;
-	return true;
+	return QRegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,10}$").exactMatch(pass);
 }
 
 void PetClientWindow::onPressSignIn() {
@@ -137,45 +156,35 @@ void PetClientWindow::onPressSignUp() {
 }
 
 void PetClientWindow::onPressSignInUp() {
-	auto button = ui->signInButton_2;
-	QString buttonText = button->text();
-	switch (m_state) {
-	case WindowState::SignIn:
-	case WindowState::SignUp: {
-		QString login = ui->loginField->text();
-		QString pass = ui->passField->text();
-		
-		QString loginErr;
-		QString emailErr;
-		QString passErr;
-		
-		if (checkLogin(login, loginErr) != LoginStatus::Ok) {
-			QMessageBox::critical(this, "Error", loginErr);
-			return;
-		}
-		if (checkPassword(pass, passErr) != PasswordStatus::Ok) {
-			QMessageBox::critical(this, "Error", passErr);
-			return;
-		}
-		//WARNING: hardcode
-		if (checkEmail("user@example.com", emailErr) != EmailStatus::Ok) {
-			QMessageBox::critical(this, "Error", emailErr);
-			return;
-		}
-		
-		if (m_state == WindowState::SignUp) {
-			m_state = WindowState::Confirmation;
-			m_confirmationFrame->setVisible(true);
-		} else {
-			m_state = WindowState::Messeging;
-			m_messagingFrame->setVisible(true);
-		}
-		
-		QMessageBox::information(this, "Info", "Work in progress");
-		break;
+	QString login = ui->loginField->text();
+	QString pass = ui->passField->text();
+	
+	QString loginErr;
+	QString emailErr;
+	QString passErr;
+	
+	if (checkLogin(login, loginErr) != LoginStatus::Ok) {
+		QMessageBox::critical(this, "Error", loginErr);
+		return;
 	}
-	default: return;
+	if (checkPassword(pass, passErr) != PasswordStatus::Ok) {
+		QMessageBox::critical(this, "Error", passErr);
+		return;
 	}
+	//WARNING: hardcode
+	if (checkEmail("user@example.com", emailErr) != EmailStatus::Ok) {
+		QMessageBox::critical(this, "Error", emailErr);
+		return;
+	}
+	
+	if (m_state == WindowState::SignUp) {
+		m_state = WindowState::Confirmation;
+		m_confirmationFrame->setVisible(true);
+	} else {
+		m_state = WindowState::Messeging;
+		m_messagingFrame->setVisible(true);
+	}
+	
 	m_signInUpFrame->setVisible(false);
 }
 
