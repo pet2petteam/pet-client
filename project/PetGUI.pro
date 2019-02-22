@@ -40,13 +40,13 @@ CONFIG(debug, debug|release) {
 	}
 }
 
-SOURCES += ../src/Forms/MessengerWidget.cpp \
-    ../include/Starter/FormStarter.cpp
+SOURCES += ../src/Forms/MessengerWidget.cpp
 SOURCES += ../src/Forms/PetClientWindow.cpp
+SOURCES += ../src/Starter/FormStarter.cpp
 
-HEADERS += ../include/Forms/MessengerWidget.h \
-    ../include/Starter/FormStarter.h
+HEADERS += ../include/Forms/MessengerWidget.h
 HEADERS += ../include/Forms/PetClientWindow.h
+HEADERS += ../include/Starter/FormStarter.h
 
 FORMS += ../ui/PetClientWindow.ui
 FORMS += ../ui/MessengerWidget.ui
