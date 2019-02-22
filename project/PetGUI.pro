@@ -4,7 +4,7 @@ TEMPLATE = lib
 
 CONFIG += c++17 console
 
-DESTDIR = ../bin
+DESTDIR = $$PWD/../bin
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -17,10 +17,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-INCLUDEPATH += ../include
-INCLUDEPATH += ../../PetAPI/include
+INCLUDEPATH += $$PWD/../include
+INCLUDEPATH += $$PWD/../../PetAPI/include
 
-DEPENDPATH += ../../PetAPI/include
+DEPENDPATH += $$PWD/../../PetAPI/include
 
 CONFIG(debug, debug|release) {
 	contains(QMAKE_HOST.arch, x86_64) {
@@ -40,16 +40,23 @@ CONFIG(debug, debug|release) {
 	}
 }
 
-SOURCES += ../src/Forms/MessengerWidget.cpp
-SOURCES += ../src/Forms/PetClientWindow.cpp
-SOURCES += ../src/Starter/FormStarter.cpp
+SOURCES += $$PWD/../src/Forms/MessengerWidget.cpp
+SOURCES += $$PWD/../src/Forms//LogRegWidget.cpp
+SOURCES += $$PWD/../src/Forms/InitScreenWidget.cpp
+SOURCES += $$PWD/../src/Forms/PetClientWindow.cpp
+SOURCES += $$PWD/../src/Starter/FormStarter.cpp
 
-HEADERS += ../include/Forms/MessengerWidget.h
-HEADERS += ../include/Forms/PetClientWindow.h
-HEADERS += ../include/Starter/FormStarter.h
+HEADERS += $$PWD/../include/Forms/MessengerWidget.h \
+    ../include/Forms/petgui_const.h
+HEADERS += $$PWD/../include/Forms/LogRegWidget.h
+HEADERS += $$PWD/../include/Forms/InitScreenWidget.h
+HEADERS += $$PWD/../include/Forms/PetClientWindow.h
+HEADERS += $$PWD/../include/Starter/FormStarter.h
 
-FORMS += ../ui/PetClientWindow.ui
-FORMS += ../ui/MessengerWidget.ui
+FORMS += $$PWD/../ui/PetClientWindow.ui
+FORMS += $$PWD/../ui/LogRegWidget.ui
+FORMS += $$PWD/../ui/InitScreenWidget.ui
+FORMS += $$PWD/../ui/MessengerWidget.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

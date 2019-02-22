@@ -1,7 +1,7 @@
-#include "FormStarter.h"
-#include <QApplication>
-
+#include "Starter/FormStarter.h"
 #include "Forms/PetClientWindow.h"
+
+#include <QApplication>
 
 namespace PetGUI::Starter {
 
