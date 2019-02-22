@@ -22,7 +22,7 @@ public:
 	explicit MessengerWidget(QWidget *parent = nullptr);
 	~MessengerWidget();
 	
-	void appentReceivedMessage(const QString & messageText);
+	void appendReceivedMessage(const QString & messageText);
 	
 private:
 	

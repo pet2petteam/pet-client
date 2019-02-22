@@ -26,7 +26,7 @@ MessengerWidget::~MessengerWidget() {
 	delete ui;
 }
 
-void MessengerWidget::appentReceivedMessage(const QString & messageText) {
+void MessengerWidget::appendReceivedMessage(const QString & messageText) {
 	if (messageText.isEmpty()) return;
 	
 	QSpacerItem * spacer = new QSpacerItem(200,0);

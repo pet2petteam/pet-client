@@ -1,8 +1,6 @@
 QT += core gui widgets network
 
-TEMPLATE = app
-
-TARGET = PetClient
+TEMPLATE = lib
 
 CONFIG += c++17 console
 
@@ -20,15 +18,35 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 INCLUDEPATH += ../include
+INCLUDEPATH += ../../PetAPI/include
 
-SOURCES += ../src/main.cpp
-SOURCES += ../src/PetClient.cpp
+DEPENDPATH += ../../PetAPI/include
+
+CONFIG(debug, debug|release) {
+	contains(QMAKE_HOST.arch, x86_64) {
+		TARGET = PetGUI_x64d
+		LIBS += -L$$PWD/../../PetAPI/bin -llibPetAPI_x64d
+	} else {
+		TARGET = PetGUI_x86d
+		LIBS += -L$$PWD/../../PetAPI/bin -llibPetAPI_x86d
+	}
+} else:CONFIG(release, debug|release) {
+	contains(QMAKE_HOST.arch, x86_64) {
+		TARGET = PetGUI_x64
+		LIBS += -L$$PWD/../../PetAPI/bin -llibPetAPI_x64
+	} else {
+		TARGET = PetGUI_x86
+		LIBS += -L$$PWD/../../PetAPI/bin -llibPetAPI_x86
+	}
+}
+
 SOURCES += ../src/Forms/MessengerWidget.cpp
 SOURCES += ../src/Forms/PetClientWindow.cpp
+SOURCES += ../src/Starter/FormStarter.cpp
 
-HEADERS += ../include/PetClient.h
 HEADERS += ../include/Forms/MessengerWidget.h
 HEADERS += ../include/Forms/PetClientWindow.h
+HEADERS += ../include/Starter/FormStarter.h
 
 FORMS += ../ui/PetClientWindow.ui
 FORMS += ../ui/MessengerWidget.ui

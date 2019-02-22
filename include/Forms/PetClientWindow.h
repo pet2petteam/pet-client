@@ -16,7 +16,6 @@ const int8_t MAX_LOGIN_LENGTH = 18;
 
 class QWidget;
 class MessengerWidget;
-class PetClient;
 
 enum class WindowState : int8_t {
 	Start = 0,
@@ -66,7 +65,6 @@ class PetClientWindow : public QMainWindow {
 	QWidget * m_messagingFrame;
 	
 	MessengerWidget * m_messenger;
-	PetClient * m_petClient;
 	
 	WindowState m_state;
 	
