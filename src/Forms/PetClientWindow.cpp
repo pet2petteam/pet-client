@@ -2,10 +2,10 @@
 #include "Forms/MessengerWidget.h"
 #include "ui_PetClientWindow.h"
 
-#include "PetClient.h"
-
 #include <QWidget>
 #include <QMessageBox>
+
+#include <iostream>
 
 PetClientWindow::PetClientWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -28,26 +28,21 @@ PetClientWindow::PetClientWindow(QWidget *parent) :
 	m_messenger->show();
 	m_messagingFrame->setVisible(false);
 	
-	m_messenger->appentReceivedMessage("This is a text message");
-	m_messenger->appentReceivedMessage("Это тестовое сообщение");
+	m_messenger->appendReceivedMessage("This is a text message");
+	m_messenger->appendReceivedMessage("Это тестовое сообщение");
 	
-	m_petClient = new PetClient(this);
 	
 	connect(ui->signInButton, &QPushButton::clicked, this, &PetClientWindow::onPressSignIn);
 	connect(ui->signUpButton, &QPushButton::clicked, this, &PetClientWindow::onPressSignUp);
 	connect(ui->signInButton_2, &QPushButton::clicked, this, &PetClientWindow::onPressSignInUp);
 	
-	connect(m_petClient, &PetClient::onMessageReceived, this, [this](const QByteArray & messBuffer){
-		m_messenger->appentReceivedMessage(QString::fromUtf8(messBuffer));
-	});
-	connect(m_messenger, &MessengerWidget::onMessageSend, this, [this](const QString & messString){
-		m_petClient->sendMessage(messString.toUtf8());
+	connect(m_messenger, &MessengerWidget::onMessageSend, this, [=](const QString & messString){
+		std::cout << "send message: " + messString.toStdString();
 	});
 }
 
 PetClientWindow::~PetClientWindow() {
 	delete m_messenger;
-	delete m_petClient;
 	delete ui;
 }
 
