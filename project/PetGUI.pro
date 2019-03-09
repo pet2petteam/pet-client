@@ -44,19 +44,22 @@ SOURCES += $$PWD/../src/Forms/MessengerWidget.cpp
 SOURCES += $$PWD/../src/Forms//LogRegWidget.cpp
 SOURCES += $$PWD/../src/Forms/InitScreenWidget.cpp
 SOURCES += $$PWD/../src/Forms/PetClientWindow.cpp
+SOURCES += $$PWD/../src/Widgets/MessageLabel.cpp
 SOURCES += $$PWD/../src/Starter/FormStarter.cpp
 
-HEADERS += $$PWD/../include/Forms/MessengerWidget.h \
-    ../include/Forms/petgui_const.h
+HEADERS += $$PWD/../include/Forms/MessengerWidget.h
 HEADERS += $$PWD/../include/Forms/LogRegWidget.h
 HEADERS += $$PWD/../include/Forms/InitScreenWidget.h
 HEADERS += $$PWD/../include/Forms/PetClientWindow.h
+HEADERS += $$PWD/../include/Widgets/MessageLabel.h
 HEADERS += $$PWD/../include/Starter/FormStarter.h
+HEADERS += $$PWD/../include/PetGUI_const.h
 
-FORMS += $$PWD/../ui/PetClientWindow.ui
-FORMS += $$PWD/../ui/LogRegWidget.ui
-FORMS += $$PWD/../ui/InitScreenWidget.ui
-FORMS += $$PWD/../ui/MessengerWidget.ui
+FORMS += $$PWD/../ui/Forms/PetClientWindow.ui
+FORMS += $$PWD/../ui/Forms/LogRegWidget.ui
+FORMS += $$PWD/../ui/Forms/InitScreenWidget.ui
+FORMS += $$PWD/../ui/Forms/MessengerWidget.ui
+FORMS += $$PWD/../ui/Widgets/MessageLabel.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -1,6 +1,6 @@
 #include "Forms/LogRegWidget.h"
 #include "ui_LogRegWidget.h"
-#include "Forms/petgui_const.h"
+#include "PetGUI_const.h"
 
 #include <QMessageBox>
 #include <QPushButton>
