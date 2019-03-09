@@ -1,5 +1,5 @@
 #include "Starter/FormStarter.h"
-#include "Forms/PetClientWindow.h"
+#include "PetMainWindow.h"
 
 #include <QApplication>
 
@@ -8,7 +8,7 @@ namespace PetGUI::Starter {
 int start(int argc, char **argv) {
 	QApplication a(argc, argv);
 	
-	PetClientWindow window;
+	PetMainWindow window;
 	window.show();
 	
 	return a.exec();

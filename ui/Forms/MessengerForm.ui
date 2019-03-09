@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MessengerWidget</class>
- <widget class="QWidget" name="MessengerWidget">
+ <class>MessengerForm</class>
+ <widget class="QWidget" name="MessengerForm">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -82,7 +82,7 @@
     </widget>
    </item>
    <item row="1" column="0">
-    <widget class="QWidget" name="" native="true">
+    <widget class="QWidget" name="widget" native="true">
      <property name="minimumSize">
       <size>
        <width>0</width>

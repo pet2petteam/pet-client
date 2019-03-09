@@ -1,13 +1,13 @@
-#include "Forms/MessengerWidget.h"
-#include "ui_MessengerWidget.h"
+#include "Forms/MessengerForm.h"
+#include "ui_MessengerForm.h"
 
 #include <QHBoxLayout>
 #include <QSpacerItem>
 #include <QLabel>
 
-MessengerWidget::MessengerWidget(QWidget *parent) :
+MessengerForm::MessengerForm(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::MessengerWidget) {
+    ui(new Ui::MessengerForm) {
 	ui->setupUi(this);
 	
 	m_messageAreaCentralWidget = new QWidget(ui->messageArea);
@@ -19,14 +19,14 @@ MessengerWidget::MessengerWidget(QWidget *parent) :
 	m_messageAreaCentralWidgetLayout->setMargin(2);
 	m_messageAreaCentralWidget->setLayout(m_messageAreaCentralWidgetLayout);
 	
-	connect(ui->sendMessageButton, &QPushButton::pressed, this, &MessengerWidget::sendMessageHandler);
+	connect(ui->sendMessageButton, &QPushButton::pressed, this, &MessengerForm::sendMessageHandler);
 }
 
-MessengerWidget::~MessengerWidget() {
+MessengerForm::~MessengerForm() {
 	delete ui;
 }
 
-void MessengerWidget::appendReceivedMessage(const QString & messageText) {
+void MessengerForm::appendReceivedMessage(const QString & messageText) {
 	if (messageText.isEmpty()) return;
 	
 	QSpacerItem * spacer = new QSpacerItem(200,0);
@@ -59,7 +59,7 @@ void MessengerWidget::appendReceivedMessage(const QString & messageText) {
 	m_messageAreaCentralWidgetLayout->addWidget(messWidget);
 }
 
-void MessengerWidget::sendMessageHandler() {
+void MessengerForm::sendMessageHandler() {
 	QString text = ui->textEdit->toPlainText();
 	if (text.isEmpty()) return;
 	

@@ -4,7 +4,7 @@
 #include <QWidget>
 
 namespace Ui {
-class LogRegWidget;
+class LogRegForm;
 }
 
 class QPushButton;
@@ -18,7 +18,7 @@ enum class LogRegMode : short {
 	SignUp = 1
 };
 
-class LogRegWidget : public QWidget {
+class LogRegForm : public QWidget {
 	
 	Q_OBJECT
 	
@@ -30,12 +30,12 @@ class LogRegWidget : public QWidget {
 	QLineEdit * m_passLine;
 	QFrame * m_emailFrame;
 	
-	Ui::LogRegWidget *ui;
+	Ui::LogRegForm *ui;
 	
 public:
 	
-	explicit LogRegWidget(QWidget *parent = nullptr, LogRegMode mode = LogRegMode::SignIn);
-	~LogRegWidget();
+	explicit LogRegForm(QWidget *parent = nullptr, LogRegMode mode = LogRegMode::SignIn);
+	~LogRegForm();
 	
 signals:
 	

@@ -6,21 +6,21 @@
 class QVBoxLayout;
 
 namespace Ui {
-class MessengerWidget;
+class MessengerForm;
 }
 
-class MessengerWidget : public QWidget {
+class MessengerForm : public QWidget {
 	
 	Q_OBJECT
 	
-	Ui::MessengerWidget *ui;
+	Ui::MessengerForm *ui;
 	QWidget * m_messageAreaCentralWidget;
 	QVBoxLayout * m_messageAreaCentralWidgetLayout;
 	
 public:
 	
-	explicit MessengerWidget(QWidget *parent = nullptr);
-	~MessengerWidget();
+	explicit MessengerForm(QWidget *parent = nullptr);
+	~MessengerForm();
 	
 	void appendReceivedMessage(const QString & messageText);
 	

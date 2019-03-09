@@ -1,5 +1,5 @@
-#include "Forms/LogRegWidget.h"
-#include "ui_LogRegWidget.h"
+#include "Forms/LogRegForm.h"
+#include "ui_LogRegForm.h"
 #include "PetGUI_const.h"
 
 #include <QMessageBox>
@@ -9,8 +9,8 @@
 
 namespace PetGUI {
 
-LogRegWidget::LogRegWidget(QWidget *parent, LogRegMode mode) :
-	QWidget(parent), m_mode(mode), ui(new Ui::LogRegWidget) {
+LogRegForm::LogRegForm(QWidget *parent, LogRegMode mode) :
+	QWidget(parent), m_mode(mode), ui(new Ui::LogRegForm) {
 	ui->setupUi(this);
 	
 	m_logRegButton = ui->LogRegButton;
@@ -24,12 +24,12 @@ LogRegWidget::LogRegWidget(QWidget *parent, LogRegMode mode) :
 		m_logRegButton->setText("Sign In");
 	} else m_logRegButton->setText("Sign Up");
 	
-	connect(m_logRegButton, &QPushButton::pressed, this, &LogRegWidget::onLogRegPressedHandler);
+	connect(m_logRegButton, &QPushButton::pressed, this, &LogRegForm::onLogRegPressedHandler);
 }
 
-LogRegWidget::~LogRegWidget() { delete ui; }
+LogRegForm::~LogRegForm() { delete ui; }
 
-void LogRegWidget::onLogRegPressedHandler() {
+void LogRegForm::onLogRegPressedHandler() {
 	switch (m_mode) {
 		case LogRegMode::SignIn:
 			loginMode();
@@ -40,20 +40,20 @@ void LogRegWidget::onLogRegPressedHandler() {
 	}
 }
 
-void LogRegWidget::registrationMode() {
+void LogRegForm::registrationMode() {
 	if (!isValidLogin(m_loginLine->text())) return;
 	if (!isValidEmail(m_emailLine->text())) return;
 	if (!isValidPassword(m_passLine->text())) return;
 	emit onLogRegPressed();
 }
 
-void LogRegWidget::loginMode() {
+void LogRegForm::loginMode() {
 	if (!isValidLogin(m_loginLine->text())) return;
 	if (!isValidPassword(m_passLine->text())) return;
 	emit onLogRegPressed();
 }
 
-bool LogRegWidget::isValidLogin(const QString & login) {
+bool LogRegForm::isValidLogin(const QString & login) {
 	if (login.isEmpty()) {
 		QMessageBox::critical(this, Const::ERROR_TITLE, "Login can't be empty.");
 		return false;
@@ -65,7 +65,7 @@ bool LogRegWidget::isValidLogin(const QString & login) {
 	return true;
 }
 
-bool LogRegWidget::isValidEmail(const QString & email) {
+bool LogRegForm::isValidEmail(const QString & email) {
 	if (email.isEmpty()) {
 		QMessageBox::critical(this, Const::ERROR_TITLE, "Email can't be empty.");
 		return false;
@@ -77,7 +77,7 @@ bool LogRegWidget::isValidEmail(const QString & email) {
 	return true;
 }
 
-bool LogRegWidget::isValidPassword(const QString & pass) {
+bool LogRegForm::isValidPassword(const QString & pass) {
 	if (pass.isEmpty()) {
 		QMessageBox::critical(this, Const::ERROR_TITLE, "Password can't be empty.");
 		return false;
